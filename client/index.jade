@@ -7,4 +7,78 @@ html
   body
     script(src='/vendor/lodash/lodash.min.js')
     script(src=isProd ? '/index.min.js' : '/index.js')
-    img#chimp(src='/assets/chimp.jpg')
+    script(src='/vendor/jquery/dist/jquery.min.js')
+    table
+      tbody
+        tr#row1
+          td.black(data-y='8' data-x='1'): .pRed
+          td.white
+          td.black(data-y='8' data-x='3'): .pRed
+          td.white
+          td.black(data-y='8' data-x='5'): .pRed
+          td.white
+          td.black(data-y='8' data-x='7'): .pRed
+          td.white
+        tr#row2
+          td.white
+          td.black(data-y='7' data-x='2'): .pRed
+          td.white
+          td.black(data-y='7' data-x='4'): .pRed
+          td.white
+          td.black(data-y='7' data-x='6'): .pRed
+          td.white
+          td.black(data-y='7' data-x='8'): .pRed
+        tr#row3
+          td.black(data-y='6' data-x='1'): .pRed
+          td.white
+          td.black(data-y='6' data-x='3'): .pRed
+          td.white
+          td.black(data-y='6' data-x='5'): .pRed
+          td.white
+          td.black(data-y='6' data-x='7'): .pRed
+          td.white
+        tr#row4
+          td.white
+          td.black(data-y='5' data-x='2')
+          td.white
+          td.black(data-y='5' data-x='4')
+          td.white
+          td.black(data-y='5' data-x='6')
+          td.white
+          td.black(data-y='5' data-x='8')
+        tr#row5
+          td.black(data-y='4' data-x='1')
+          td.white
+          td.black(data-y='4' data-x='3')
+          td.white
+          td.black(data-y='4' data-x='5')
+          td.white
+          td.black(data-y='4' data-x='7')
+          td.white
+        tr#row6
+          td.white
+          td.black.pb(data-y='3' data-x='2'): .pBlack
+          td.white
+          td.black.pb(data-y='3' data-x='4'): .pBlack
+          td.white
+          td.black.pb(data-y='3' data-x='6'): .pBlack
+          td.white
+          td.black.pb(data-y='3' data-x='8'): .pBlack
+        tr#row7
+          td.black(data-y='2' data-x='1'): .pBlack
+          td.white
+          td.black(data-y='2' data-x='3'): .pBlack
+          td.white
+          td.black(data-y='2' data-x='5'): .pBlack
+          td.white
+          td.black(data-y='2' data-x='7'): .pBlack
+          td.white
+        tr#row8
+          td.white
+          td.black(data-y='1' data-x=''): .pBlack
+          td.white
+          td.black(data-y='1' data-x=''): .pBlack
+          td.white
+          td.black(data-y='1' data-x=''): .pBlack
+          td.white
+          td.black(data-y='1' data-x=''): .pBlack
