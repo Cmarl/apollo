@@ -4,6 +4,7 @@ $(document).ready(init);
 
 var current ='red';
 var $source;
+var $target;
 
 function init(){
   initBoard();
@@ -13,10 +14,10 @@ function init(){
 }
 
 function move(){
-    if(!$source){
+  if(!$source){
     return;
   }
-  var $target = $(this);
+  $target = $(this);
   var isKing = $source.is('.king');
 
   var src = {};
@@ -107,6 +108,10 @@ function select(){
 
 function canJump(compass, $source){
 
+}
+
+function isKing($target){
+  
 }
 
 function initBoard(){
