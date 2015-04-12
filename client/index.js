@@ -11,7 +11,7 @@ function init(){
   switchUser();
   $('table').on('click','.active',select);
   $('table').on('click','.empty', move);
-  $('button').on('click',initBoard());
+  $('button').click(init);
 }
 
 function move(){
@@ -43,6 +43,8 @@ function move(){
     case 'jump':
       movePiece($target,$source);
       killMan(src,tgt,compass,isKing);
+      canJump(compass, $source);
+      debugger;
       switchUser();
   }
 }
@@ -61,8 +63,8 @@ function movePiece($target,$source){
   $target.attr('class', sourceClasses);
   $source.attr('class', targetClasses);
 
-  $target.data('y') === 0 ? $target.addClass('king redKing') : console.log('shit monkey');
-  $target.data('y') === 7 ? $target.addClass('king blackKinged') : console.log('shit monkey');
+  $target.data('y') === 0 ? $target.addClass('king redKing') : console.log('monkey gauntlet');
+  $target.data('y') === 7 ? $target.addClass('king blackKinged') : console.log('giraffe attack');
 
 }
 
@@ -86,7 +88,7 @@ function isJump(src, tgt, compass, isKing){
   var checkNorth = compass.north * 2;
   var compassSouth = compass.south * 2;
 
-  return (src.x + checkEast === tgt.x || src.x + checkWest === tgt.x) && (src.y + checkNorth === tgt.y) || (src.y + compassSouth === tgt.y) || (isKing && src.y + compassSouth === tgt.y);
+  return (src.x + checkEast === tgt.x || src.x + checkWest === tgt.x) && (src.y + checkNorth === tgt.y) || (isKing && src.y + compassSouth === tgt.y);
 }
 
 function isEnemy($middle){
@@ -111,6 +113,14 @@ function inMiddle(src, tgt,compass, isKing){
   return $middle;
 }
 
+function inMiddle(compass){
+  var checkX = (src.x + tgt.x) / 2;
+  var checkY = (src.y + tgt.y) / 2;
+  var $middle = ($('td[data-x='+checkX+']td[data-y='+checkY+']'));
+  $middle = $middle[0];
+  return $middle;
+}
+
 function select(){
   $source = $(this);
   $('.valid').removeClass('selected');
@@ -118,28 +128,25 @@ function select(){
 }
 
 function canJump(compass, $source){
-  compass ={};
-  compass.north = (current === 'red') ? -1 : 1;
-  compass.east = (current === 'red') ? 1 : -1;
-  compass.west = compass.east * -1;
-  compass.south = compass.north *-1;
   compass.north2 = compass.north * 2;
   compass.east2 = compass.east * 2;
   compass.west2 = compass.west * 2;
   compass.south2 = compass.south * 2;
-  if (isEnemy($source, compass.east, compass.north)){
-    return canJumpTo($source, compass.east2, compass.north2) ? true : false;
+  if (isEnemy(compass.east, compass.north)){
+    return canJumpTo(compass.east2, compass.north2) ? true : false;
   }
-  if (isEnemy($source, compass.west, compass.north)) {
-    return canJumpTo($source, compass.west2, compass.north2) ? true : false;
+  if (isEnemy(compass.west, compass.north)) {
+    return canJumpTo(compass.west2, compass.north2) ? true : false;
   }
   if (isKing){
-    if (isEnemy($source, compass.east, compass.south)) {
-      return canJumpTo($source, compass.east2, compass.south2) ? true : false;
+    if (isEnemy(compass.east, compass.south)) {
+      return canJumpTo(compass.east2, compass.south2) ? true : false;
     }
-    if (isEnemy($source, compass.west, compass.south)) {
-      return canJumpTo($source, compass.west2, compass.south2) ? true : false;
+    if (isEnemy(compass.west, compass.south)) {
+      return canJumpTo(compass.west2, compass.south2) ? true : false;
     }
+  } else {
+    return;
   }
 }
 
