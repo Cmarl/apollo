@@ -11,6 +11,7 @@ function init(){
   switchUser();
   $('table').on('click','.active',select);
   $('table').on('click','.empty', move);
+  $('button').on('click',initBoard());
 }
 
 function move(){
@@ -41,12 +42,13 @@ function move(){
       break;
     case 'jump':
       movePiece($target,$source);
-      killFucker(src,tgt,compass,isKing);
+      killMan(src,tgt,compass,isKing);
+      switchUser();
   }
 }
 
-function killFucker(src,tgt,compass,isKing){
-  console.log('killing fucker actived');
+function killMan(src,tgt,compass,isKing){
+  console.log('kill activated');
   var $middle = inMiddle(src,tgt,compass,isKing);
   $($middle).removeClass().addClass('valid empty');
 
@@ -58,6 +60,10 @@ function movePiece($target,$source){
 
   $target.attr('class', sourceClasses);
   $source.attr('class', targetClasses);
+
+  $target.data('y') === 0 ? $target.addClass('king redKing') : console.log('shit monkey');
+  $target.data('y') === 7 ? $target.addClass('king blackKinged') : console.log('shit monkey');
+
 }
 
 function moveType(src,tgt,compass,isKing){
@@ -86,8 +92,13 @@ function isJump(src, tgt, compass, isKing){
 function isEnemy($middle){
   if ($($middle).hasClass('black')&&($($source).hasClass('red')) || ($($middle).hasClass('red') && $($source).hasClass('black'))){
     return true;
-  }
-  else {
+  } else if ($($middle).hasClass('blackKinged')&&($($source).hasClass('redKing')) || ($($middle).hasClass('redKing') && $($source).hasClass('blackKinged'))){
+    return true;
+  } else if ($($middle).hasClass('black')&&($($source).hasClass('redKing')) || ($($middle).hasClass('red') && $($source).hasClass('blackKinged'))){
+    return true;
+  } else if ($($middle).hasClass('blackKinged')&&($($source).hasClass('red')) || ($($middle).hasClass('redKing') && $($source).hasClass('black'))){
+    return true;
+  } else {
     return false;
   }
 }
@@ -107,11 +118,37 @@ function select(){
 }
 
 function canJump(compass, $source){
+  compass ={};
+  compass.north = (current === 'red') ? -1 : 1;
+  compass.east = (current === 'red') ? 1 : -1;
+  compass.west = compass.east * -1;
+  compass.south = compass.north *-1;
+  compass.north2 = compass.north * 2;
+  compass.east2 = compass.east * 2;
+  compass.west2 = compass.west * 2;
+  compass.south2 = compass.south * 2;
+  if (isEnemy($source, compass.east, compass.north)){
+    return canJumpTo($source, compass.east2, compass.north2) ? true : false;
+  }
+  if (isEnemy($source, compass.west, compass.north)) {
+    return canJumpTo($source, compass.west2, compass.north2) ? true : false;
+  }
+  if (isKing){
+    if (isEnemy($source, compass.east, compass.south)) {
+      return canJumpTo($source, compass.east2, compass.south2) ? true : false;
+    }
+    if (isEnemy($source, compass.west, compass.south)) {
+      return canJumpTo($source, compass.west2, compass.south2) ? true : false;
+    }
+  }
+}
+
+function canJumpTo($source, xdirection, ydirection){
 
 }
 
-function isKing($target){
-  
+function isKing(){
+  return $source.hasClass('king');
 }
 
 function initBoard(){
