@@ -11,7 +11,7 @@ function init(){
   switchUser();
   $('table').on('click','.active',select);
   $('table').on('click','.empty', move);
-  $('button').click(init);
+  //$('button').click(init);
 }
 
 function move(){
@@ -34,7 +34,6 @@ function move(){
   compass.east = (current === 'red') ? 1 : -1;
   compass.west = compass.east * -1;
   compass.south = compass.north * -1;
-
   switch(moveType(src,tgt,compass,isKing)){
     case 'move':
       movePiece($target,$source);
@@ -43,11 +42,69 @@ function move(){
     case 'jump':
       movePiece($target,$source);
       killMan(src,tgt,compass,isKing);
-      canJump(compass, $source);
-      debugger;
-      switchUser();
+      $source = $target;
+      $target = undefined;
+      if (!jumpAvailable(compass)){
+        switchUser();
+      }
   }
 }
+
+function jumpAvailable(compass){
+  var src = {};//source coordinates
+  src.x = $source.data('x');
+  src.y = $source.data('y');
+  // coordinates of all spaces within 1 and 2 spaces of source
+  var enemyChecks = {
+    northEast: {x: (src.x + compass.east), y: (src.y + compass.north)},
+    northWest: {x: (src.x + compass.west), y: (src.y + compass.north)},
+    southEast: {x: (src.x + compass.east), y: (src.y + compass.south)},
+    southWest: {x: (src.x + compass.west), y: (src.y + compass.south)}
+  };
+  var spaceChecks = {
+    northEast: {x: (src.x + (compass.east * 2)), y: (src.y + (compass.north * 2))},
+    northWest: {x: (src.x + (compass.west * 2)), y: (src.y + (compass.north * 2))},
+    southEast: {x: (src.x + (compass.east * 2)), y: (src.y + (compass.south * 2))},
+    southWest: {x: (src.x + (compass.west * 2)), y: (src.y + (compass.south * 2))},
+  };
+
+  //debugger;
+  var keys = Object.keys(enemyChecks);
+  var available = [];
+
+  if (isKing()){
+    available = checkKeys(keys,enemyChecks,spaceChecks);
+    console.log(available);
+  }
+  else {
+    available = checkKeys([keys[0],keys[1]],enemyChecks, spaceChecks);
+  }
+  if (available.length){
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+function checkKeys(keys,enemyChecks,spaceChecks){
+  var available = [];
+  console.log(enemyChecks);
+  keys.forEach(function(key){
+    var coords = enemyChecks[key];
+    console.log(key);
+    var $spot = ($('td[data-x='+coords.x+']td[data-y='+coords.y+']'));
+    if (isEnemy($($spot))){
+      var coords2 = spaceChecks[key];
+      var $spot2 = ($('td[data-x='+coords2.x+']td[data-y='+coords2.y+']'));
+      if ($spot2.hasClass('empty')){
+        available.push($($spot2));
+      }
+    }
+  });
+  return available;
+}
+
 
 function killMan(src,tgt,compass,isKing){
   console.log('kill activated');
@@ -113,45 +170,10 @@ function inMiddle(src, tgt,compass, isKing){
   return $middle;
 }
 
-function inMiddle(compass){
-  var checkX = (src.x + tgt.x) / 2;
-  var checkY = (src.y + tgt.y) / 2;
-  var $middle = ($('td[data-x='+checkX+']td[data-y='+checkY+']'));
-  $middle = $middle[0];
-  return $middle;
-}
-
 function select(){
   $source = $(this);
   $('.valid').removeClass('selected');
   $source.addClass('selected');
-}
-
-function canJump(compass, $source){
-  compass.north2 = compass.north * 2;
-  compass.east2 = compass.east * 2;
-  compass.west2 = compass.west * 2;
-  compass.south2 = compass.south * 2;
-  if (isEnemy(compass.east, compass.north)){
-    return canJumpTo(compass.east2, compass.north2) ? true : false;
-  }
-  if (isEnemy(compass.west, compass.north)) {
-    return canJumpTo(compass.west2, compass.north2) ? true : false;
-  }
-  if (isKing){
-    if (isEnemy(compass.east, compass.south)) {
-      return canJumpTo(compass.east2, compass.south2) ? true : false;
-    }
-    if (isEnemy(compass.west, compass.south)) {
-      return canJumpTo(compass.west2, compass.south2) ? true : false;
-    }
-  } else {
-    return;
-  }
-}
-
-function canJumpTo($source, xdirection, ydirection){
-
 }
 
 function isKing(){
